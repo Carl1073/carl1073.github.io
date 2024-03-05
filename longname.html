@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <meta name="description" content="字句加長">
+  <meta name="keyword" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+<style>
+.num {
+  width: 50px;
+}
+
+.copy{
+  padding-right: 10px;
+  color: blue;
+}
+</style>
+
+<body>
+<h1>Make Name looooooooonger</h1>
+<input id="nameInput" value="Nick">
+<button onclick="nameGenerate()">
+  Generate
+</button><br>
+<br>
+<div id="setting">
+  Setting:<br>
+  <input type="checkbox" id="capital1st" name="capital1st" value="capital1st">
+  <label for="capital1st">Capitalize first letter</label><br>
+  <input type="checkbox" id="random" name="random" value="random">
+  <label for="random">Random capitalize</label><br>
+  Random range: <input class="num" type="number" id="min" value=4>-
+  <input class="num" type="number" id="max" value=8>
+</div>
+
+<a>Result:</a>
+<p id="output"></p>
+
+<script>
+let idno = 1;
+
+function nameGenerate() {
+  let name = document.getElementById("nameInput").value;
+  let min = parseInt(document.getElementById("min").value);
+  let max = parseInt(document.getElementById("max").value);
+  let capital = document.getElementById("capital1st").checked;
+  let random = document.getElementById("random").checked;
+  let outputName = "";
+  let arr = name.split("");
+  for (let i = 0; i < arr.length; i++) {
+    if (random == true) {
+      outputName += longerRandom(arr[i], min, max, capital);
+    } else {
+      outputName += longer(arr[i], min, max, capital)
+    }
+  }
+
+  //typing
+  insertEnement("span", "Copy", "copy", "output", "copy" + idno);
+  insertEnement("span", outputName, "", "output", "output" + idno);
+  document.getElementById("output").innerHTML += "<br>";
+
+  //add event listener
+  document.getElementById("copy" + idno).addEventListener("click", copy("output" + idno));
+  idno++;
+}
+
+function longerRandom(letter, min, max, cap1) {
+  let result = ""
+  let randomLength = Math.round(Math.random() * (max - min) - 1) + min;
+  for (let i = 0; i <= randomLength; i++) {
+    let upOrLow = Math.floor(Math.random() * 2);
+    if (upOrLow == 0) {
+      if (i == 0 & cap1 == true) {
+        result += letter.toUpperCase();
+      } else {
+        result += letter.toLowerCase();
+      }
+
+    } else {
+      result += letter.toUpperCase();
+    }
+  }
+  return result;
+}
+
+function longer(letter, min, max, cap1) {
+  let result = ""
+  let randomLength = Math.round(Math.random() * (max - min) - 1) + min;
+  for (let i = 0; i <= randomLength; i++) {
+    if (i == 0 & cap1 == true) {
+      result += letter.toUpperCase();
+    } else {
+      result += letter;
+    }
+  }
+  return result;
+}
+
+function insertEnement(type, text, eclass, insertId, newId) {
+  let element = document.createElement(type);
+  element.innerHTML = text;
+  element.className = eclass;
+  element.id = newId;
+  document.getElementById(insertId).appendChild(element);
+}
+
+function copy(id) {
+  /* Get the text field */
+  var copyText = document.getElementById(id).innerHTML;
+
+  navigator.clipboard.writeText(copyText).then(function() {
+    console.log('Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Could not copy text: ', err);
+  })
+}
+
+</script>
+
+</body>
+</html>
